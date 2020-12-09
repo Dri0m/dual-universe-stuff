@@ -1,10 +1,13 @@
-local cellsColumns = 40 -- that's X, or game width
-local cellsRows = 23    -- that's Y, or game height
+-- game of life implementation written by Dri0m
+
+local cellsColumns = 40
+local cellsRows = 23
+
+local stepDuration = 0.2
+local initialAlive = 0.5
 
 local backgroundColor = "rgb(0,0,0)"
 local cellColor = "rgb(255,255,255)"
-
-local initialAlive = 0.5
 
 -- do not modify below
 
@@ -121,4 +124,4 @@ end
 ---------------
 
 World = generateRandomWorld(cellsColumns, cellsRows)
-unit.setTimer("step", 0.2)
+unit.setTimer("step", stepDuration)
