@@ -1,0 +1,1 @@
+screen.setCenteredText("game of life")

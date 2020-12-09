@@ -1,0 +1,127 @@
+{
+    "slots": {
+        "0": {
+            "name": "screen",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "1": {
+            "name": "slot2",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "2": {
+            "name": "slot3",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "3": {
+            "name": "slot4",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "4": {
+            "name": "slot5",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "5": {
+            "name": "slot6",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "6": {
+            "name": "slot7",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "7": {
+            "name": "slot8",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "8": {
+            "name": "slot9",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "9": {
+            "name": "slot10",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-1": {
+            "name": "unit",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-2": {
+            "name": "system",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-3": {
+            "name": "library",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        }
+    },
+    "handlers": [{
+            "code": "local cellsColumns = 40 -- that's X, or game width\nlocal cellsRows = 23    -- that's Y, or game height\n\nlocal backgroundColor = \"rgb(0,0,0)\"\nlocal cellColor = \"rgb(255,255,255)\"\n\nlocal initialAlive = 0.5\n\n-- do not modify below\n\nlocal screenWidth = 1920\nlocal screenHeight = 1080\nlocal cellWidth = math.floor(screenWidth/cellsColumns)\nlocal cellHeight = math.floor(screenHeight/cellsRows)\n\nlocal svg_bgr_rect = [[<rect x=0 y=0 width=\"100%\" height=\"100%\" fill=\"]] .. backgroundColor .. [[\"/>]]\nlocal svg_cell = [[<use x=%s y=%s xlink:href=\"#cell\"/>]]\nlocal defs = [[<defs>]] .. string.format([[<rect id=\"cell\" width=%s height=%s fill=\"%s\"/>]], cellWidth, cellHeight, cellColor) ..[[</defs>]]\n\n\n-- utils --\n\nlocal function randomBool()\n    if math.random() < initialAlive then\n        return true\n    end\n    return false\nend\n\n-----------\n\n-- simulation --\n\nlocal function generateRandomWorld(width, height)\n    local result = {}\n    for x=1, width do\n        local column = {}\n        for y=1, height do\n            table.insert(column, randomBool())\n        end\n        table.insert(result, column)\n    end\n    return result\nend\n\nlocal function getNeighbour(data, nx, ny)\n    if nx < 1 or nx > cellsColumns or ny < 1 or ny > cellsRows then\n        return false\n    end\n    return data[nx][ny]\nend\n\nlocal function countLivingNeighbours(data, x, y)\n    local counter = 0\n    if getNeighbour(data, x-1, y-1) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x, y-1) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x+1, y-1) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x-1, y) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x+1, y) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x-1, y+1) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x, y+1) then\n        counter = counter + 1\n    end\n    if getNeighbour(data, x+1, y+1) then\n        counter = counter + 1\n    end\n    return counter\nend\n\nfunction DoStep(data)\n    local result = {}\n    for x=1, cellsColumns do\n        local column = {}\n        for y=1, cellsRows do\n            local neighbours = countLivingNeighbours(data, x, y)\n            if data[x][y] and (neighbours == 2 or neighbours == 3) then\n                table.insert(column, true)\n            elseif not data[x][y] and neighbours == 3 then\n                table.insert(column, true)\n            else\n                table.insert(column, false)\n            end\n        end\n        table.insert(result, column)\n    end\n    return result\nend\n\n----------------\n\n-- rendering --\n\nlocal function FormatCell(x, y)\n    return string.format(svg_cell, math.floor((x-1)*cellWidth), math.floor((y-1)*cellHeight))\nend\n\nfunction WorldToSVG(data)\n    local svg = svg_bgr_rect .. defs\n    for x=1, cellsColumns do\n        for y=1, cellsRows do\n            if data[x][y] then\n            \tsvg = svg .. FormatCell(x, y, data[x][y])\n            end\n        end\n    end\n    return svg\nend\n\n---------------\n\nWorld = generateRandomWorld(cellsColumns, cellsRows)\nunit.setTimer(\"step\", 0.2)",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-1"
+            },
+            "key": "0"
+        },
+        {
+            "code": "screen.setSVG(WorldToSVG(World))\nWorld = DoStep(World)",
+            "filter": {
+                "args": [{
+                    "value": "step"
+                }],
+                "signature": "tick(timerId)",
+                "slotKey": "-1"
+            },
+            "key": "1"
+        },
+        {
+            "code": "screen.setCenteredText(\"game of life\")",
+            "filter": {
+                "args": [],
+                "signature": "stop()",
+                "slotKey": "-1"
+            },
+            "key": "2"
+        }
+    ],
+    "methods": [],
+    "events": []
+}
