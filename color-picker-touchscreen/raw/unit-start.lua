@@ -1,5 +1,3 @@
--- the y coordinate set to -40 is a hack to put the whole image on the screen
--- not sure what's the proper way to fix this bu
 local gradientSVG = [[
     <svg class="bootstrap" viewBox="0 0 1920 1080" style="width:100%; height:100%" preserveAspectRatio="none">
         <defs>
