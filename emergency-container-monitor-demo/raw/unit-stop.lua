@@ -1,0 +1,1 @@
+screen.setCenteredText("Emergency container monitor")
