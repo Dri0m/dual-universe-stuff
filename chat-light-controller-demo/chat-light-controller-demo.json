@@ -1,0 +1,136 @@
+{
+    "slots": {
+        "0": {
+            "name": "l1",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "1": {
+            "name": "l2",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "2": {
+            "name": "l3",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "3": {
+            "name": "l4",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "4": {
+            "name": "l5",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "5": {
+            "name": "l6",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "6": {
+            "name": "l7",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "7": {
+            "name": "l8",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "8": {
+            "name": "l9",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "9": {
+            "name": "l10",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-1": {
+            "name": "unit",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-2": {
+            "name": "system",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-3": {
+            "name": "library",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        }
+    },
+    "handlers": [{
+            "code": "system.print(\"bye\")\nupdateLights(255, 255, 255)",
+            "filter": {
+                "args": [],
+                "signature": "stop()",
+                "slotKey": "-1"
+            },
+            "key": "0"
+        },
+        {
+            "code": "system.print(\"hi\")\n-- defitions\nlightsMode = \"idle\"\n\nlights = {l1, l2, l3, l4, l5, l6, l7, l8, l9, l10}\n\nfunction updateLights(r, g, b)\n    for i = 1, #lights do\n        if lights[i] ~= nil then\n            lights[i].setRGBColor(r, g, b)\n        end\n    end\nend\n\nfunction activateLights()\n    for i = 1, #lights do\n        if lights[i] ~= nil then\n            lights[i].activate()\n        end\n    end\nend\n\nfunction deactivateLights()\n    for i = 1, #lights do\n        if lights[i] ~= nil then\n            lights[i].deactivate()\n        end\n    end\nend\n\n\n-- https://stackoverflow.com/a/14733008\nfunction HSVtoRGB(h, s, v)\n    local r, g, b\n    \n    h = math.floor(h)\n    s = math.floor(s)\n    v = math.floor(v)\n\n    if s <= 0 then\n        r = v\n        g = v\n        b = v\n        return r, g, b\n    end\n\n    local region = math.floor(h / 43)\n    local remainder = math.floor((h - (region*43)) * 6)\n    \n    local p = (v * (255 - s)) >> 8\n    local q = (v * (255 - ((s * remainder) >> 8))) >> 8\n    local t = (v * (255 - ((s * (255 - remainder)) >> 8))) >> 8\n    \n    if region == 0 then\n        r = v\n        g = t\n        b = p\n    elseif region == 1 then\n        r = q\n        g = v\n        b = p\n    elseif region == 2 then\n        r = p\n        g = v\n        b = t\n    elseif region == 3 then\n        r = p\n        g = q\n        b = v\n    elseif region == 4 then\n        r = t\n        g = p\n        b = v\n    else\n        r = v\n        g = p\n        b = q\n    end\n    \n    return r, g, b\nend\n",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-1"
+            },
+            "key": "1"
+        },
+        {
+            "code": "-- obtain delta\nlocal dt = system.getActionUpdateDeltaTime()\n\n-- set light color if holding lmb\nif lightsMode == \"idle\" then\n    updateLights(255, 255, 255)\nelseif lightsMode == \"alert\" then\n    animationCounter = animationCounter + dt * 300\n    animationCounter = animationCounter % 255\n    r, g, b = HSVtoRGB(0, 255, animationCounter)\n    updateLights(r, g, b)\nelseif lightsMode == \"disco\" then\n    animationCounter = animationCounter + dt * 100\n    animationCounter = animationCounter % 255\n    r, g, b = HSVtoRGB(animationCounter, 255, 255)\n    updateLights(r, g, b)\nelseif lightsMode == \"super disco\" then\n    animationCounter = animationCounter + dt * 300\n    animationCounter = animationCounter % 255\n    r, g, b = HSVtoRGB(animationCounter, 255, 255)\n    updateLights(r, g, b)\nelseif lightsMode == \"hyper disco\" then\n    animationCounter = animationCounter + dt * 500\n    animationCounter = animationCounter % 255\n    r, g, b = HSVtoRGB(animationCounter, 255, 255)\n    updateLights(r, g, b)\nend",
+            "filter": {
+                "args": [],
+                "signature": "update()",
+                "slotKey": "-2"
+            },
+            "key": "2"
+        },
+        {
+            "code": "if text == \"idle\" or text == \"alert\" or text == \"disco\" or text == \"super disco\" or text == \"hyper disco\" then\n    system.print(string.format(\"setting lights mode to '%s'\", text))\n    lightsMode = text\n    animationCounter = 0\n    updateLights(255, 255, 255)\nelseif text == \"on\" then\n    system.print(\"activating lights\")\n    activateLights()\nelseif text == \"off\" then\n    system.print(\"deactivating lights\")\n    deactivateLights()\nelse\n    system.print(string.format(\"unknown command '%s'\", text))\nend",
+            "filter": {
+                "args": [{
+                    "variable": "*"
+                }],
+                "signature": "inputText(text)",
+                "slotKey": "-2"
+            },
+            "key": "3"
+        }
+    ],
+    "methods": [],
+    "events": []
+}
