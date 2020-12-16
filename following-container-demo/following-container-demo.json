@@ -1,0 +1,145 @@
+{
+    "slots": {
+        "0": {
+            "name": "core",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "1": {
+            "name": "gyro",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "2": {
+            "name": "slot3",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "3": {
+            "name": "slot4",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "4": {
+            "name": "slot5",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "5": {
+            "name": "slot6",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "6": {
+            "name": "slot7",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "7": {
+            "name": "slot8",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "8": {
+            "name": "slot9",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "9": {
+            "name": "slot10",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-1": {
+            "name": "unit",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-2": {
+            "name": "system",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-3": {
+            "name": "library",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        }
+    },
+    "handlers": [{
+            "code": "system.print(\"Following Container Example by Dri0m (_Dri0m)\")\n\n-- Nav setup\nNav = Navigator.new(system, core, unit)\nNav.axisCommandManager:setupCustomTargetSpeedRanges(axisCommandId.longitudinal, {1000, 5000, 10000, 20000, 30000})\nNav.axisCommandManager:setTargetGroundAltitude(2)\n\nunit.setTimer(\"infoPrinter\", 1.0)",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-1"
+            },
+            "key": "0"
+        },
+        {
+            "code": "local worldVertical = vec3(core.getWorldVertical()) -- along gravity\nlocal playerRelativePosition = vec3(unit.getMasterPlayerRelativePosition())\n\n\nlocal flatPlayerDepth = playerRelativePosition:project_on(-worldVertical):len()\nlocal flatPlayerPosV = playerRelativePosition:project_on_plane(worldVertical)\nlocal infoStr = \"DEPTH: \" .. string.format(\"%4.1f\", flatPlayerDepth) .. \"m\"\nlocal depthStr = \"DIST: \" .. string.format(\"%4.1f\", vec3:new(0,0,0):dist(flatPlayerPosV)) .. \"m\"\nlocal statusStr = \"\"\nif followPlayer then\n    statusStr = \"STATUS: MOVING\"\nelse\n    statusStr = \"STATUS: IDLE\"\nend\n    \nsystem.print(infoStr .. \", \" .. depthStr .. \", \" .. statusStr)",
+            "filter": {
+                "args": [{
+                    "value": "infoPrinter"
+                }],
+                "signature": "tick(timerId)",
+                "slotKey": "-1"
+            },
+            "key": "1"
+        },
+        {
+            "code": "system.print(\"Thank you for trying it out. Made by _Dri0m.\")\nsystem.print(\"https://github.com/Dri0m/dual-universe-stuff\")",
+            "filter": {
+                "args": [],
+                "signature": "stop()",
+                "slotKey": "-1"
+            },
+            "key": "2"
+        },
+        {
+            "code": "local pitchSpeedFactor = 2\nlocal yawSpeedFactor = 2 \nlocal rollSpeedFactor = 2 \n\n\nlocal torqueFactor = 4 -- Force factor applied to reach rotationSpeed<br>(higher value may be unstable)<br>Valid values: Superior or equal to 0.01                             \nlocal brakeFactor = 3\nlocal followPitch = 45 -- Construct tilts forward in order to mvoe forward, this is constant atm\n\n-- validate params\nplayerDistanceFollow = math.max(playerDistanceFollow, playerDistanceIdle + 1)\nplayerDistanceIdle = math.max(playerDistanceIdle, 1)\n\n-- Axis\nlocal worldVertical = vec3(core.getWorldVertical()) -- along gravity\nlocal constructUp = vec3(core.getConstructWorldOrientationUp())\nlocal constructForward = vec3(core.getConstructWorldOrientationForward())\nlocal constructRight = vec3(core.getConstructWorldOrientationRight())\nlocal constructVelocity = vec3(core.getWorldVelocity())\nlocal constructVelocityDir = vec3(core.getWorldVelocity()):normalize()\nlocal currentRollDeg = getRoll(worldVertical, constructForward, constructRight)\nlocal currentRollDegAbs = math.abs(currentRollDeg)\nlocal currentRollDegSign = utils.sign(currentRollDeg)\nlocal playerRelativePosition = vec3(unit.getMasterPlayerRelativePosition())\n\n-- turn towards player\nlocal flatForward = constructForward:project_on_plane(worldVertical)\nlocal flatPlayerPos = playerRelativePosition:project_on_plane(worldVertical)\nlocal playerCross = vec3(flatForward:normalize()):cross(flatPlayerPos:normalize())\nplayerCross.z = playerCross.z --/ 3.15\nyawInput = math.abs(playerCross.z) * utils.sign(playerCross.z) * utils.sign(-worldVertical.z) --cross.z * powerModifier + utils.sign(cross.z) * powerUnModifier\n\n-- follow player\nlocal playerDistance = vec3:new(0,0,0):dist(flatPlayerPos)\nif playerDistance > playerDistanceFollow then\n    followPlayer = true\nelseif playerDistance < playerDistanceIdle then\n    followPlayer = false\nend\n    \n    \nlocal pitch = gyro.getPitch()\nif followPlayer then\n    targetHeight = hoverHeightFollow\n    -- TODO use PID maybe\n    --altPID:inject(hoverHeightFollow)\n    --Nav.axisCommandManager:setTargetGroundAltitude(altPID:get())\n    pitch = pitch + followPitch -- hack: modify gyro's output to trick the ship into stabilizing in a specific direction\nelse\n    targetHeight = hoverHeightIdle\n    -- TODO use PID maybe\n    --altPID:inject(hoverHeightIdle)\n    --Nav.axisCommandManager:setTargetGroundAltitude(altPID:get())\nend\n\nif targetHeight - currentHeight > 0.0001 then\n    currentHeight = currentHeight + 0.05\nelseif currentHeight - targetHeight > 0.0001 then\n    currentHeight = currentHeight - 0.05\nend\nNav.axisCommandManager:setTargetGroundAltitude(currentHeight)\n\n-- adjust pitch\npitchInput = (math.abs(pitch) / 180) * utils.sign(-pitch) --(-pitch / 180) * powerModifier + utils.sign(-pitch) * powerUnModifier\n\n-- stabilize roll\nlocal roll = gyro.getRoll()\nrollInput = (math.abs(roll) / 180) * utils.sign(roll) --(roll / 180) * powerModifier + utils.sign(roll) * powerUnModifier\n\n-- Rotation\nlocal constructAngularVelocity = vec3(core.getWorldAngularVelocity())\n\n-- final inputs\nlocal finalPitchInput = pitchInput\nlocal finalRollInput = rollInput\n\nyawPID:inject(yawInput)\nlocal finalYawInput = yawPID:get()\n\nlocal targetAngularVelocity = finalPitchInput * pitchSpeedFactor * constructRight \n+ finalRollInput * rollSpeedFactor * constructForward\n+ finalYawInput * yawSpeedFactor * constructUp\n\n-- Rotation\nlocal angularAcceleration = torqueFactor * (targetAngularVelocity - constructAngularVelocity)\nlocal airAcceleration = vec3(core.getWorldAirFrictionAngularAcceleration())\nangularAcceleration = angularAcceleration - airAcceleration -- Try to compensate air friction                                            \nNav:setEngineTorqueCommand('torque', angularAcceleration, true)\n\n-- braking\nlocal flatVelocity = constructVelocity:project_on_plane(worldVertical)\nlocal flatWPalyerPos = vec3(system.getPlayerWorldPos(unit.getMasterPlayerId())):project_on_plane(worldVertical)\nlocal playerVelocityAngle = flatVelocity:angle_between(flatPlayerPos)\n\nif flatVelocity:len() > 5 then\n    brakeInput = playerVelocityAngle / 3.142\nelse\n    brakeInput = brakeInput * 0.1\nend\n\nif followPlayer then\n    Nav:setEngineForceCommand('brake', -constructVelocity * brakeInput * brakeFactor)\nelse\n    Nav:setEngineForceCommand('brake', -constructVelocityDir * 1000)\nend",
+            "filter": {
+                "args": [],
+                "signature": "flush()",
+                "slotKey": "-2"
+            },
+            "key": "3"
+        },
+        {
+            "code": "pitchInput = 0 -- 1, 0, -1\nrollInput = 0 -- 1, 0, -1\nyawInput = 0 -- 1, 0, -1\nfollowPlayer = false\nyawPID = pid.new(1, 0, 5)\n--altPID = pid.new(0, 15, 0)\nbrakeInput = 0\n\nplayerDistanceFollow = 100 --export: The construct will start following when player is this far (in meters, > playerDistanceIdle + 1.0)\nplayerDistanceIdle = 20 --export: The construct will stop following when player is this close (in meters, > 1.0)\nhoverHeightFollow = 30 --export: How high does the construct hovers when following\nhoverHeightIdle = 4 --export: How high does the construct hovers when idle\ntargetHeight = hoverHeightIdle\ncurrentHeight = 0",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-2"
+            },
+            "key": "4"
+        }
+    ],
+    "methods": [],
+    "events": []
+}
