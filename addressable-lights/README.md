@@ -9,7 +9,7 @@ As a demonstration, the main board supports taking commands from player, but **t
 [See video here how it works](https://unstable.life/pending-universe/addressable-lights.mp4)
 
 ### Setup (Main board)
-1. Consider taking out the `sendRGB` function and just using it in your own code, that's all you have to do to integrate this system into your code (and then handle activation of the aux boards, using counters for example).
+1. Consider taking out the `sendRGB` function and just using it in your own code, that's all you have to do to integrate this system into your code.
 2. Copy `addressable-lights-main.json` contents into the clipboard and paste into the programming board
 3. Link emitter to the programming board
 4. Link a 3-counter to the programming board
