@@ -1,0 +1,130 @@
+{
+    "slots": {
+        "0": {
+            "name": "emitter",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "1": {
+            "name": "counter1",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "2": {
+            "name": "slot3",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "3": {
+            "name": "slot4",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "4": {
+            "name": "slot5",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "5": {
+            "name": "slot6",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "6": {
+            "name": "slot7",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "7": {
+            "name": "slot8",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "8": {
+            "name": "slot9",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "9": {
+            "name": "slot10",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-1": {
+            "name": "unit",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-2": {
+            "name": "system",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-3": {
+            "name": "library",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        }
+    },
+    "handlers": [
+        {
+            "code": "toggleAuxBoards()",
+            "filter": {
+                "args": [],
+                "signature": "stop()",
+                "slotKey": "-1"
+            },
+            "key": "0"
+        },
+        {
+            "code": "-- modify or link more counters according to the amount of aux boards you have\nfunction toggleAuxBoards()\n    counter1.next()\n    counter1.next()\n    counter1.next()\nend\n\n-- boardID indexed from 1 to 99, however many you configured\n-- lightID indexed from 1 to 9, if some lights are missing, the aux boards skip them\n-- send boardID=0 to address all boards\n-- send lightID=0 to address all lights\nfunction sendRGB(boardID, lightID, r, g, b)\n    local data = string.format(\"%02d|%d|%03d|%03d|%03d\", boardID, lightID, math.floor(r), math.floor(g), math.floor(b))\n    emitter.send(\"rgb-SecretCode123\", data)\nend\n\ntoggleAuxBoards()",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-1"
+            },
+            "key": "1"
+        },
+        {
+            "code": "local boardID = tonumber(text:sub(1,2))\nlocal lightID = tonumber(text:sub(4,4))\nlocal r = tonumber(text:sub(6,8))\nlocal g = tonumber(text:sub(10,12))\nlocal b = tonumber(text:sub(14,16))\n\nsendRGB(boardID, lightID, r, g,  b)",
+            "filter": {
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ],
+                "signature": "inputText(text)",
+                "slotKey": "-2"
+            },
+            "key": "2"
+        }
+    ],
+    "methods": [],
+    "events": []
+}

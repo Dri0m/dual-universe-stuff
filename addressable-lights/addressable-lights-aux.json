@@ -1,0 +1,124 @@
+{
+    "slots": {
+        "0": {
+            "name": "receiver",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "1": {
+            "name": "L1",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "2": {
+            "name": "L2",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "3": {
+            "name": "L3",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "4": {
+            "name": "L4",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "5": {
+            "name": "L5",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "6": {
+            "name": "L6",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "7": {
+            "name": "L7",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "8": {
+            "name": "L8",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "9": {
+            "name": "L9",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-1": {
+            "name": "unit",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-2": {
+            "name": "system",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        },
+        "-3": {
+            "name": "library",
+            "type": {
+                "events": [],
+                "methods": []
+            }
+        }
+    },
+    "handlers": [
+        {
+            "code": "local board = tonumber(message:sub(1, 2))\nlocal light = tonumber(message:sub(4, 4))\nlocal r = tonumber(message:sub(6, 8))\nlocal g = tonumber(message:sub(10, 12))\nlocal b = tonumber(message:sub(14, 16))\n\nif board == boardID or board == 0 then\n\tupdateLights(light, r, g, b)\nend",
+            "filter": {
+                "args": [
+                    {
+                        "value": "rgb-SecretCode123"
+                    },
+                    {
+                        "variable": "*"
+                    }
+                ],
+                "signature": "receive(channel,message)",
+                "slotKey": "0"
+            },
+            "key": "0"
+        },
+        {
+            "code": "boardID = 1 --export: Board ID, should be unique\nlights = {L1, L2, L3, L4, L5, L6, L7, L8, L9}\n\nfunction updateLights(light, r, g, b)\n    for i = 1, #lights do\n        if light == i or light == 0 then\n            if lights[i] ~= nil then\n                lights[i].setRGBColor(r, g, b)\n            end\n        end\n    end\nend",
+            "filter": {
+                "args": [],
+                "signature": "start()",
+                "slotKey": "-1"
+            },
+            "key": "1"
+        }
+    ],
+    "methods": [],
+    "events": []
+}
