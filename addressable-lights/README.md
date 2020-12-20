@@ -1,5 +1,6 @@
 # addressable-lights
 A script consisting of main board and auxillary board(s), communicating using emiiter and receiver.
+This can handle animations just fine, provided you don't go over the CPU budget due to too many mesasges sent per tick (you can fix this by using more programming boards for sending messages).
 
 As a demonstration, the main board supports taking commands from player, but **this system is not intended to be used directly by players, you should control it by code.**
 
@@ -28,6 +29,10 @@ As a demonstration, the main board supports taking commands from player, but **t
 - r, g, b can be 0-255 and represent the individual color channels, or control codes
 - send r,g,b=701 to turn the light on
 - send r,g,b=702 to turn the light off
+
+### How many lights can this thing handle?
+DU starts being a bit unstable when I'm running more than 25 programming boards at once.
+
 
 ### Setup
 1. Use `sendRGB` from the main board to send the data. Your programming board has to have an emitter linked to it.
