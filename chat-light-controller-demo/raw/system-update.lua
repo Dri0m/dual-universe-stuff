@@ -1,7 +1,6 @@
 -- obtain delta
 local dt = system.getActionUpdateDeltaTime()
 
--- set light color if holding lmb
 if lightsMode == "idle" then
     updateLights(255, 255, 255)
 elseif lightsMode == "alert" then
