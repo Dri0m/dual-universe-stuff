@@ -94,7 +94,7 @@
     },
     "handlers": [
         {
-            "code": "local board = tonumber(message:sub(1, 2))\nlocal light = tonumber(message:sub(4, 4))\nlocal r = tonumber(message:sub(6, 8))\nlocal g = tonumber(message:sub(10, 12))\nlocal b = tonumber(message:sub(14, 16))\n\nif board == boardID or board == 0 then\n\tupdateLights(light, r, g, b)\nend",
+            "code": "local board = tonumber(message:sub(1, 2))\nlocal light = tonumber(message:sub(4, 4))\nlocal r = tonumber(message:sub(6, 8))\nlocal g = tonumber(message:sub(10, 12))\nlocal b = tonumber(message:sub(14, 16))\n\nif board == boardID or board == 0 then\n     if r == 701 and g == 701 and b == 701 then\n\t    activateLights(light)\n     elseif r == 702 and g == 702 and b == 702 then\n         deactivateLights(light)\n     else\n\t    updateLights(light, r, g, b)\n     end\nend",
             "filter": {
                 "args": [
                     {
@@ -110,7 +110,7 @@
             "key": "0"
         },
         {
-            "code": "boardID = 1 --export: Board ID, should be unique\nlights = {L1, L2, L3, L4, L5, L6, L7, L8, L9}\n\nfunction updateLights(light, r, g, b)\n    for i = 1, #lights do\n        if light == i or light == 0 then\n            if lights[i] ~= nil then\n                lights[i].setRGBColor(r, g, b)\n            end\n        end\n    end\nend",
+            "code": "boardID = 1 --export: Board ID, should be unique\nlights = {L1, L2, L3, L4, L5, L6, L7, L8, L9}\n\nfunction updateLights(light, r, g, b)\n    for i = 1, #lights do\n        if light == i or light == 0 then\n            if lights[i] ~= nil then\n                lights[i].setRGBColor(r, g, b)\n            end\n        end\n    end\nend\n\nfunction activateLights(light)\n    for i = 1, #lights do\n        if light == i or light == 0 then\n            if lights[i] ~= nil then\n                lights[i].activate()\n            end\n        end\n    end\nend\n\nfunction deactivateLights(light)\n    for i = 1, #lights do\n        if light == i or light == 0 then\n            if lights[i] ~= nil then\n                lights[i].deactivate()\n            end\n        end\n    end\nend",
             "filter": {
                 "args": [],
                 "signature": "start()",

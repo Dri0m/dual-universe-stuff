@@ -10,3 +10,23 @@ function updateLights(light, r, g, b)
         end
     end
 end
+
+function activateLights(light)
+    for i = 1, #lights do
+        if light == i or light == 0 then
+            if lights[i] ~= nil then
+                lights[i].activate()
+            end
+        end
+    end
+end
+
+function deactivateLights(light)
+    for i = 1, #lights do
+        if light == i or light == 0 then
+            if lights[i] ~= nil then
+                lights[i].deactivate()
+            end
+        end
+    end
+end

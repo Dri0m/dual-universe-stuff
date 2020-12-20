@@ -5,5 +5,11 @@ local g = tonumber(message:sub(10, 12))
 local b = tonumber(message:sub(14, 16))
 
 if board == boardID or board == 0 then
-	updateLights(light, r, g, b)
+     if r == 701 and g == 701 and b == 701 then
+	    activateLights(light)
+     elseif r == 702 and g == 702 and b == 702 then
+         deactivateLights(light)
+     else
+	    updateLights(light, r, g, b)
+     end
 end

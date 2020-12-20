@@ -25,7 +25,9 @@ As a demonstration, the main board supports taking commands from player, but **t
 ### The sendRGB function
 - boardID can be 1-99 to address individual boards, or 0 to address all
 - lightID can be 1-9 to address individual lights, or 0 to address all
-- r, g, b can be 0-255 and represent the individual color channels
+- r, g, b can be 0-255 and represent the individual color channels, or control codes
+- send r,g,b=701 to turn the light on
+- send r,g,b=702 to turn the light off
 
 ### Setup
 1. Use `sendRGB` from the main board to send the data. Your programming board has to have an emitter linked to it.
