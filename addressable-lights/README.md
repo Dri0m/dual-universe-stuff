@@ -1,6 +1,5 @@
 # addressable-lights
 A script consisting of main board and auxillary board(s), communicating using emitter and receiver.
-This can handle animations just fine, provided you don't go over the CPU budget due to too many mesasges sent per tick (you can fix this by using more programming boards for sending messages).
 
 As a demonstration, the main board supports taking commands from player, but **this system is not intended to be used directly by players, you should control it by code.**
 
