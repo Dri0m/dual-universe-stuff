@@ -30,7 +30,7 @@ As a demonstration, the main board supports taking commands from player, but **t
 - send r,g,b=702 to turn the light off
 
 ### How many lights can this thing handle?
-DU starts being a bit unstable when I'm running more than 25 programming boards at once. There also seems to be a limit of 5 emits per `update()` but I'm not sure. 
+DU starts being a bit unstable when I'm running more than 25 programming boards at once. There also seems to be a limit of 5 emits per `update()` but the limiter is probably using a different metric than emits-per-frame.
 
 
 ### Setup
