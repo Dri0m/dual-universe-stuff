@@ -7,6 +7,9 @@ As a demonstration, the main board supports taking commands from player, but **t
 
 [See video here how it works](https://unstable.life/pending-universe/addressable-lights.mp4)
 
+
+![](matrix-display.gif)
+
 ### Setup (Main board)
 1. Consider taking out the `sendRGB` function and just using it in your own code, that's all you have to do to integrate this system into your code.
 2. Copy `addressable-lights-main.json` contents into the clipboard and paste into the programming board
